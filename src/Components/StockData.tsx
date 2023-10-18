@@ -8,7 +8,6 @@ interface StockDataProps {
 }
 
 const StockData: React.FC<StockDataProps> = ({ symbol, prices }) => {
-    // const sortedSymbols = symbol;
     const itemsPerRow = 3;
 
     // Create an array of arrays, each containing 'itemsPerRow' items and calculate the amount of rows needed
@@ -18,19 +17,17 @@ const StockData: React.FC<StockDataProps> = ({ symbol, prices }) => {
 
     return (
         <>
-        {/* 
-            Parent Div on StockPrice exists already and class id is 'stockPrices, reason for using an empty JSX parent element'.
-      
-            'CARD' FOR DISPLAYING ALL OF THE STOCK INFORMATION
-        */}
-        <h1 className="mt-6 text-center max-sm:font-semibold font-medium text-lg">
+        {/* Parent Div on StockPrice exists already and class id is 'stockPrices, reason for using an empty JSX parent element'.*/}
+        <h1 className="mt-6 text-center max-sm:font-semibold font-medium text-lg text-indigo-950">
             {symbol.length ? 'Stock Prices' : 'Enter Symbols to Show Stock Prices'}
         </h1>
-        {/* Card Background */}
+        {/* CARD FOR DISPLAYING STOCK DATA*/}
         <div className="lg:flex lg:flex-col lg:justify-center">
             {rows.map((row, rowIndex) => (
+            // Change # of columns in the grid below
             <div key={`row-${rowIndex}`} className="grid grid-cols-1 gap-8 mt-8 sm:grid-cols-3">
-                {row.map((symbols) => (             
+                {row.map((symbols) => (   
+                //Card background and "container"          
                 <div
                     key={symbols}
                     className={`${
@@ -50,7 +47,7 @@ const StockData: React.FC<StockDataProps> = ({ symbol, prices }) => {
                     <div className="flex items-center justify-between pb-4">
                         <div className="font-semibold">Price</div>
                         <div>
-                            {/* If price doesn't exist, then there was only one symbol input by the user, changes the way data must be referenced */}
+                            {/* Display "symbols" if there were multiple if not, only use a "symbol" */}
                             {prices[symbols] ? prices[symbols] : prices[symbol]}
                         </div>
                     </div>

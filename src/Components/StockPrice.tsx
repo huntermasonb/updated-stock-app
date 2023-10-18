@@ -13,11 +13,11 @@ const StockPrice: React.FC = () => {
     setPrices({});
     setSymbols(inputSymbols);
     
-    // Sorting the symbols as the user inputs them since I couldn't figure out how to sort after the data was returned.
+    // Sorting (and some other corrections) the symbols as the user inputs them since I couldn't figure out how to sort after the data was returned.
     const sortedSymbols = inputSymbols
-    .split(',/ ')
+    .split(',/')
     .map((symbol) => symbol.trim())
-    .filter((symbol) => symbol.length > 1)
+    .filter((symbol) => symbol.length >= 1)
     .sort()
     .join(',');
 
@@ -25,7 +25,7 @@ const StockPrice: React.FC = () => {
     const stockPricesView = document.getElementById('stockPricesView');
     if (stockPricesView) {
       stockPricesView.style.display = "none";
-    }
+    };
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); 
@@ -33,12 +33,12 @@ const StockPrice: React.FC = () => {
     const stockPricesView = document.getElementById('stockPricesView');
     if (stockPricesView) {
       stockPricesView.style.display = "flex";
-    }
+    };
   };
   
   // API Request and parameters
   const fetchData = async () => {
-    if (symbols) {
+    if (sortedSymbols) {
       const options = {
         method: 'GET',
         url: 'https://twelve-data1.p.rapidapi.com/price',
@@ -54,7 +54,6 @@ const StockPrice: React.FC = () => {
       };
       try {
         const response = await axios.request(options);
-        console.log(response);
         // Error Handling
         if (response.status !== 200){
           alert("Error: Please make sure you entered valid stock symbols.")
@@ -64,11 +63,19 @@ const StockPrice: React.FC = () => {
         }
         // End Error Handling
         else {
-          setPrices(response.data);
+          const data = response.data;
+          // Format the API response to properly handle the data.
+          const formattedPrices: Record<string, number> = {}
+          for (const symbol of Object.keys(data)) {
+            formattedPrices[symbol] = parseFloat(data[symbol].price);
+          }
+          console.log(formattedPrices);
+          setPrices(formattedPrices);
         }      
       } 
       catch (error) {
         console.error(error);
+        alert(error);
       }
     } else {
       alert("An error occured, please try again.")
